@@ -1,3 +1,28 @@
+estrutura dos arquivos -> 
+
+
+AnimeWishlist/
+├── App.js                      # entrada: navegação + provider
+└── src/
+    ├── context/
+    │   └── AnimeContext.js     # estado global + salvar no AsyncStorage
+    ├── screens/
+    │   ├── HomeScreen.js       # lista geral + adicionar anime
+    │   ├── ListScreen.js       # tela reutilizada por cada aba
+    ├── components/
+    │   ├── AnimeCard.js        # cartão com os 3 botões
+    │   └── AddAnimeInput.js    # campo para adicionar
+    └── constants/
+        └── status.js           # os 3 status e suas cores
+
+
+
+
+
+
+
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
@@ -13,6 +38,7 @@ To start the Metro dev server, run the following command from the root of your R
 ```sh
 # Using npm
 npm start
+npm run android 
 
 # OR using Yarn
 yarn start
