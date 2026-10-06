@@ -1,123 +1,155 @@
-estrutura dos arquivos -> 
+# 🎌 AnimeWishlist
 
+Aplicativo Android para organizar os animes que você assistiu no ano em três listas simples: **Favoritos**, **Dislike** e **Dropados**. Feito com React Native e JavaScript, com os dados salvos no próprio aparelho (sem conta e sem internet).
 
+<!-- Dica: adicione prints do app em docs/screenshots/ e referencie aqui -->
+<!-- ![Tela de favoritos](docs/screenshots/favoritos.png) -->
+
+## ✨ Funcionalidades
+
+- ❤️ **Favoritos**: animes que você gostou
+- 👎 **Dislike**: animes que você não gostou
+- 🚫 **Dropados**: animes que você começou e não quis terminar
+- Adicione um anime direto na aba em que está
+- Troque o status de um anime com um toque
+- Remova animes da lista
+- Os dados ficam salvos no aparelho (AsyncStorage) e continuam ali depois de fechar o app
+
+## 🛠️ Tecnologias
+
+| Tecnologia | Uso |
+|---|---|
+| [React Native](https://reactnative.dev) (CLI) | Base do app |
+| [React Navigation](https://reactnavigation.org) (bottom tabs) | Navegação por abas |
+| [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) | Armazenamento local |
+| React Context API | Estado global |
+
+## 📁 Estrutura do projeto
+
+```
 AnimeWishlist/
-├── App.js                      # entrada: navegação + provider
+├── App.js                      # Entrada: navegação por abas + provider
+├── android/                    # Projeto nativo Android
 └── src/
     ├── context/
-    │   └── AnimeContext.js     # estado global + salvar no AsyncStorage
+    │   └── AnimeContext.js     # Estado global + persistência no AsyncStorage
     ├── screens/
-    │   ├── HomeScreen.js       # lista geral + adicionar anime
-    │   ├── ListScreen.js       # tela reutilizada por cada aba
+    │   └── ListScreen.js       # Tela reutilizada por cada aba (muda só o filtro)
     ├── components/
-    │   ├── AnimeCard.js        # cartão com os 3 botões
-    │   └── AddAnimeInput.js    # campo para adicionar
+    │   ├── AnimeCard.js        # Cartão do anime com os botões de status
+    │   └── AddAnimeInput.js    # Campo para adicionar anime
     └── constants/
-        └── status.js           # os 3 status e suas cores
+        └── status.js           # Os 3 status, ícones e cores
+```
 
+## ✅ Pré-requisitos
 
+| Item | Versão | Como conferir |
+|---|---|---|
+| Node.js | 20 ou superior | `node -v` |
+| JDK (Java) | 17 | `java -version` |
+| Android Studio | versão recente | - |
+| Android SDK | Platform-Tools, Build-Tools, Emulator e Command-line Tools | SDK Manager do Android Studio |
 
+### Variáveis de ambiente
 
+Configure estas variáveis (no Windows: *Variáveis de Ambiente do usuário*) e **reabra o terminal/editor** depois:
 
+| Variável | Exemplo (Windows) |
+|---|---|
+| `JAVA_HOME` | `C:\Program Files\Eclipse Adoptium\jdk-17.x.x-hotspot` |
+| `ANDROID_HOME` | `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk` |
 
+E adicione ao `Path`:
 
+```
+%ANDROID_HOME%\platform-tools
+%ANDROID_HOME%\emulator
+%JAVA_HOME%\bin
+```
 
+Confira se tudo está certo:
 
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+```bash
+node -v
+java -version
+adb --version
+```
 
-# Getting Started
+## 🚀 Como rodar
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+### 1. Clone e instale as dependências
 
-## Step 1: Start Metro
+> ⚠️ **Windows:** clone em um caminho **curto** (por exemplo `C:\aw`). Caminhos longos quebram a compilação nativa (erro *"Filename longer than 260 characters"*).
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+```bash
+git clone https://github.com/SEU_USUARIO/AnimeWishlist.git C:/aw
+cd C:/aw
+npm install
+```
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 2. Abra um emulador Android
 
-```sh
-# Using npm
+No Android Studio, abra o **Device Manager**, crie (ou use) um dispositivo virtual e inicie-o. Confirme que ele foi detectado:
+
+```bash
+adb devices
+```
+
+Deve aparecer algo como `emulator-5554   device`.
+
+### 3. Inicie o app
+
+Use dois terminais na pasta do projeto.
+
+**Terminal 1: servidor Metro**
+```bash
 npm start
-npm run android 
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+**Terminal 2: compila e instala no emulador**
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+A primeira build demora vários minutos (o Gradle baixa dependências). As próximas são bem mais rápidas, e as alterações no código aparecem sozinhas (Fast Refresh).
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+### Dica: acelerar o build
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Se o seu emulador for `x86_64` (confira com `adb shell getprop ro.product.cpu.abi`), edite `android/gradle.properties` para compilar só essa arquitetura:
 
-```sh
-bundle install
+```
+reactNativeArchitectures=x86_64
 ```
 
-Then, and every time you update your native dependencies, run:
+## 🧯 Problemas comuns
 
-```sh
-bundle exec pod install
-```
+| Problema | Solução |
+|---|---|
+| `JAVA_HOME is set to an invalid directory` | A pasta do JDK no `JAVA_HOME` não existe ou tem espaço sobrando no valor. Confira o nome exato da pasta. |
+| `adb: command not found` | Instale o *Platform-Tools* no SDK Manager e confira o `Path`. Reabra o terminal. |
+| `SDK location not found` | Crie `android/local.properties` com `sdk.dir=C\:\\Users\\SEU_USUARIO\\AppData\\Local\\Android\\Sdk` |
+| `Filename longer than 260 characters` | Mova o projeto para um caminho curto (ex.: `C:\aw`), ative *LongPathsEnabled* no Windows e limpe o cache: `rm -rf android/.cxx android/app/.cxx android/app/build android/build` |
+| `Another process is running on port 8081` | Há um Metro antigo aberto. Encerre o processo que usa a porta, ou use a 8082 e rode `adb reverse tcp:8082 tcp:8082`. |
+| Tela vermelha de conexão no app | Rode `adb reverse tcp:8081 tcp:8081` e recarregue com `r` no Metro. |
+| Erro estranho de cache | `cd android && ./gradlew clean && cd ..` |
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 🗺️ Próximos passos
 
-```sh
-# Using npm
-npm run ios
+- [ ] Busca de animes pela API [Jikan](https://jikan.moe) (capa e nota)
+- [ ] Filtro por ano
+- [ ] Trocar status deslizando o cartão (swipe)
+- [ ] Tema escuro
+- [ ] Ícones vetoriais no lugar dos emojis
 
-# OR using Yarn
-yarn ios
-```
+## 📱 Plataformas
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+O foco atual é **Android**. O código em JavaScript é compartilhado, mas a versão iOS não foi configurada nem testada (exige um Mac com Xcode e CocoaPods).
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🤝 Contribuindo
 
-## Step 3: Modify your app
+Sugestões e pull requests são bem-vindos. Abra uma *issue* descrevendo a ideia ou o problema antes de começar algo grande.
 
-Now that you have successfully run the app, let's make changes!
+## 📄 Licença
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Defina a licença do projeto (por exemplo [MIT](https://choosealicense.com/licenses/mit/)) e adicione um arquivo `LICENSE` na raiz do repositório.
